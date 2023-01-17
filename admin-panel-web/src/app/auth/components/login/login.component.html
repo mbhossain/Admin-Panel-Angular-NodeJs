@@ -1,0 +1,44 @@
+<div class="login">
+    <div class="container">
+        <div class="logo">ADMIN PANEL LOGIN</div>
+        <div class="login-item">
+
+            <form (ngSubmit)="onSubmit()" #myForm="ngForm" class="form form-login">
+                <br />
+
+                <div class="form-field">
+                    <label class="user" for="login-username"><i class="fa fa-envelope" aria-hidden="true"></i></label>
+                    <input id="login-username" type="text" class="form-input" placeholder="Email or Username" required
+                        [(ngModel)]="user.username" name="username">
+                </div>
+
+                <div class="form-field">
+                    <label class="lock" for="login-password"><i class="fa fa-unlock-alt" aria-hidden="true"></i></label>
+                    <input id="login-password" type="password" class="form-input" placeholder="Password" required
+                        [(ngModel)]="user.password" name="gpassword" [type]="showPasswordOnPress ? 'password' : 'text'">
+
+                    <div (mousedown)="showPasswordOnPress = !showPasswordOnPress"
+                        (mouseup)="showPasswordOnPress = !showPasswordOnPress">
+                        <i alt="show" class="fas fa-eye eye-show password-show-hide" *ngIf="!showPasswordOnPress"></i>
+                        <i alt="hide" class="fas fa-eye-slash eye-hide password-show-hide"
+                            *ngIf="showPasswordOnPress"></i>
+                    </div>
+                </div>
+
+
+                <div class="form-field" style=" flex-direction:column;">
+                    <input type="submit" value="Sign in">
+                    <mat-progress-bar mode="indeterminate" *ngIf="showprogressbar"></mat-progress-bar>
+                </div>
+
+                <div class="form-field">
+                    <button mat-button color="warn" type="button" (click)="forgotPassWord()">
+                        <i class="fa fa-key" aria-hidden="true"></i> Forget Password</button>
+                    <button mat-button type="button" (click)="openModal()" style="color: white;">
+                        <i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
