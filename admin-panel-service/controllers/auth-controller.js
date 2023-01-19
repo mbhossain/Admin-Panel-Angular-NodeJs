@@ -78,8 +78,7 @@ export const passwordReset = async (req, res) => {
             return res.status(400).send("user with given email doesn't exist");
 
         let token = await Token.findOne({ userId: user._id });
-        console.log('token:', token)
-        console.log('!token:', !token)
+       
         if (!token) {
             token = await new Token({
                 userId: user._id,
@@ -88,7 +87,7 @@ export const passwordReset = async (req, res) => {
         }
 
         const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
-        console.log('link:', link)
+       
         await sendEmail(user.email, "Password reset", link);
 
         res.send("password reset link sent to your email account");
@@ -113,7 +112,10 @@ export const passwordUpdated = async (req, res) => {
         });
         if (!token) return res.status(400).send("Invalid link or expired");
 
-        user.password = req.body.password;
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(req.body.password, salt);
+
+        user.password = hash;
         await user.save();
         await token.delete();
 
