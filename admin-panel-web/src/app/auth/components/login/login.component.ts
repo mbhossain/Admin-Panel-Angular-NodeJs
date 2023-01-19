@@ -34,7 +34,7 @@ export class LoginComponent {
     , private _matDialog: MatDialog
   ) { }
 
-  openModal() {
+  openUserRegistrationModal() {
     this.registerDialogRef = this._matDialog.open(RegisterComponent, {
       data: { name: this.name },
       disableClose: true,
@@ -49,7 +49,7 @@ export class LoginComponent {
     });
   }
 
-  forgotPassWord() {
+  openForgotPassWordModal() {
     this.forgetPasswordDialogRef = this._matDialog.open(ForgotPasswordComponent, {
       data: { name: this.name },
       disableClose: true
