@@ -44,6 +44,7 @@ export const login = async (req, res, next) => {
                 { username: req.body.username }
             ]
         });
+
         if (!user) return next(createError(404, 'User not found!'));
 
         const isPasswordCorrect = await bcrypt.compare(
@@ -74,11 +75,12 @@ export const passwordReset = async (req, res) => {
         if (error) return res.status(400).send(error.details[0].message);
 
         const user = await User.findOne({ email: req.body.email });
+
         if (!user)
             return res.status(400).send("user with given email doesn't exist");
 
         let token = await Token.findOne({ userId: user._id });
-       
+
         if (!token) {
             token = await new Token({
                 userId: user._id,
@@ -87,7 +89,7 @@ export const passwordReset = async (req, res) => {
         }
 
         const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
-       
+
         await sendEmail(user.email, "Password reset", link);
 
         res.send("password reset link sent to your email account");
@@ -95,21 +97,25 @@ export const passwordReset = async (req, res) => {
         res.send("An error occured");
         console.log(error);
     }
+
 }
 
 export const passwordUpdated = async (req, res) => {
     try {
         const schema = Joi.object({ password: Joi.string().required() });
         const { error } = schema.validate(req.body);
+
         if (error) return res.status(400).send(error.details[0].message);
 
         const user = await User.findById(req.params.userId);
+
         if (!user) return res.status(400).send("invalid link or expired");
 
         const token = await Token.findOne({
             userId: user._id,
             token: req.params.token,
         });
+        
         if (!token) return res.status(400).send("Invalid link or expired");
 
         const salt = bcrypt.genSaltSync(10);
