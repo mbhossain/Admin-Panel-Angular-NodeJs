@@ -88,11 +88,13 @@ export const passwordReset = async (req, res) => {
             }).save();
         }
 
-        const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
-
+        // const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
+        const link = `Your password reset key given below :
+            ${user._id}/${token.token}`;
+        console.log('link:', link)
         await sendEmail(user.email, "Password reset", link);
 
-        res.send("password reset link sent to your email account");
+        res.send({ 'statusText': 'Password reset link sent to your email account!' });
     } catch (error) {
         res.send("An error occured");
         console.log(error);
@@ -125,7 +127,7 @@ export const passwordUpdated = async (req, res) => {
         await user.save();
         await token.delete();
 
-        res.send("password reset sucessfully.");
+        res.send({ 'statusText': 'Password reset sucessfully!' });
     } catch (error) {
         res.send("An error occured");
         console.log(error);
