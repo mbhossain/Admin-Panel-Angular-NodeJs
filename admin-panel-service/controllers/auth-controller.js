@@ -77,7 +77,7 @@ export const passwordReset = async (req, res) => {
         const user = await User.findOne({ email: req.body.email });
 
         if (!user)
-            return res.status(400).send("user with given email doesn't exist");
+            return res.status(400).send("User with given email doesn't exist");
 
         let token = await Token.findOne({ userId: user._id });
 
