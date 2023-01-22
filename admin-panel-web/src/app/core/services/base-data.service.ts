@@ -13,12 +13,12 @@ export class BaseDataService {
 
   constructor(private _http: HttpClient) { }
 
-  // formatErrors
+  /* formatErrors */
   private formatErrors(error: any) {
     return throwError(error.error);
   }
 
-  // Save
+  /* Save */
   public save<T>(path: string, entity: any): Observable<any> {
     return this._http.post<T>(
       `${path}`,
@@ -27,9 +27,5 @@ export class BaseDataService {
       // this.headerProvd.getHeader('application/json')
     ).pipe(catchError(this.formatErrors));
   }
-
-  // getCategory() {
-  //   return this._http.get<any>('http://localhost:3000/api/get-all');
-  // }
 
 }

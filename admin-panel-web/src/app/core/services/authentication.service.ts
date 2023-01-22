@@ -39,5 +39,9 @@ export class AuthenticationService {
     return localStorage.removeItem('token');
   }
 
+  resetPasswordSendMail(emailOrusername: {}) {
+    return this.apiService.save<any>(this.serverPath + 'password-reset', emailOrusername)
+  }
+
 
 }

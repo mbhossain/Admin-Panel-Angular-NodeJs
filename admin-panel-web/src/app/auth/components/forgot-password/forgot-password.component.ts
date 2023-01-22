@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 
 /* Our own stuff */
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { user } from '../../models/user';
+import { Forget_Password } from '../../models/forget-password';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,11 +17,9 @@ import { user } from '../../models/user';
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent {
-  public name: string = '';
-  public registerForm!: FormGroup;
+  public forgetPasswordForm!: FormGroup;
   public fieldRequired: string = "This field is required";
-  public user = new user();
-  public hide:boolean = true;
+  public forgetPassword = new Forget_Password();
 
   constructor(
     private _mdr: MatDialogRef<ForgotPasswordComponent>
@@ -29,9 +27,7 @@ export class ForgotPasswordComponent {
     , private auth: AuthenticationService
     , private _toastr: ToastrService
     , private _router: Router
-  ) {
-    this.name = data.name;
-  }
+  ) { }
 
   ngOnInit() {
     this.createForm();
@@ -43,56 +39,41 @@ export class ForgotPasswordComponent {
 
   createForm() {
     let emailregex: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    this.registerForm = new FormGroup(
+    this.forgetPasswordForm = new FormGroup(
       {
-        'username': new FormControl(null, [Validators.required]),
-        'email': new FormControl(null, [Validators.required, Validators.pattern(emailregex)]),
-        'password': new FormControl(null, [Validators.required, this.checkPassword]),
+        // 'username': new FormControl(null, [Validators.required]),
+        'email': new FormControl(null, [Validators.required, Validators.pattern(emailregex)])
       }
     )
-
-
   }
 
   emaiErrors() {
-    return this.registerForm.get('email')?.hasError('required') ? 'This field is required' :
-      this.registerForm.get('email')?.hasError('pattern') ? 'Not a valid emailaddress' : ''
-  }
-
-  checkPassword(control: any) {
-    let enteredPassword = control.value
-    let passwordCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})/;
-    return (!passwordCheck.test(enteredPassword) && enteredPassword) ? { 'requirements': true } : null;
-  }
-
-  getErrorPassword() {
-    return this.registerForm.get('password')?.hasError('required') ? 'This field is required (The password must be at least six characters, one uppercase letter and one number)' :
-      this.registerForm.get('password')?.hasError('requirements') ? 'Password at least six characters, one uppercase letter and one number' : '';
+    return this.forgetPasswordForm.get('email')?.hasError('required') ? 'This field is required' :
+      this.forgetPasswordForm.get('email')?.hasError('pattern') ? 'Not a valid emailaddress' : ''
   }
 
   checkValidation(input: string) {
-    const validation = this.registerForm.get(input)?.invalid && (this.registerForm.get(input)?.dirty || this.registerForm.get(input)?.touched)
+    const validation = this.forgetPasswordForm.get(input)?.invalid && (this.forgetPasswordForm.get(input)?.dirty || this.forgetPasswordForm.get(input)?.touched)
     return validation;
   }
 
   onSubmit(formData: FormGroup, formDirective: FormGroupDirective): void {
-    this.user.email = formData.value.email;
-    this.user.password = formData.value.password;
-    this.user.username = formData.value.username;
-    this.auth.registerUSer(this.user).subscribe(
+    this.forgetPassword.email = formData.value.email;
+    // this.forgetPassword.username = formData.value.username;
+    this.auth.resetPasswordSendMail(this.forgetPassword).subscribe(
       res => {
         // localStorage.setItem('token', res.token);
-        console.log('res:',res)
+        console.log('res:', res)
         this._mdr.close(false);
         this._router.navigate(['login']);
-        return this._toastr.success('Registration successfully!', "success");
+        return this._toastr.success(res.statusText, "success");
       },
       err => {
         return this._toastr.error(err.statusText ? err.statusText : 'Unknown error!', "Error");
       }
     );
     formDirective.resetForm();
-    this.registerForm.reset();
+    this.forgetPasswordForm.reset();
   }
 
 }
