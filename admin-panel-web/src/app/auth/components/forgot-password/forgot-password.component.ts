@@ -1,7 +1,7 @@
 /* Angular Stuff */
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Router } from '@angular/router';
 
 /* Third party */
@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 /* Our own stuff */
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { Forget_Password } from '../../models/forget-password';
+import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 
 @Component({
   selector: 'app-forgot-password',
@@ -21,12 +22,16 @@ export class ForgotPasswordComponent {
   public fieldRequired: string = "This field is required";
   public forgetPassword = new Forget_Password();
 
+  public resetPasswordDialogRef!: MatDialogRef<ResetPasswordComponent>;
+  public name: string = 'Password Reset!';
+
   constructor(
     private _mdr: MatDialogRef<ForgotPasswordComponent>
     , @Inject(MAT_DIALOG_DATA) data: any
     , private auth: AuthenticationService
     , private _toastr: ToastrService
     , private _router: Router
+    , private _matDialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -65,7 +70,7 @@ export class ForgotPasswordComponent {
         // localStorage.setItem('token', res.token);
         console.log('res:', res)
         this._mdr.close(false);
-        this._router.navigate(['login']);
+        this.openResetPassWordModal();
         return this._toastr.success(res.statusText, "success");
       },
       err => {
@@ -74,6 +79,19 @@ export class ForgotPasswordComponent {
     );
     formDirective.resetForm();
     this.forgetPasswordForm.reset();
+  }
+
+  openResetPassWordModal() {
+    this.resetPasswordDialogRef = this._matDialog.open(ResetPasswordComponent, {
+      data: { name: this.name },
+      disableClose: true
+    });
+
+    this.resetPasswordDialogRef.afterClosed().subscribe(res => {
+      if ((res == true)) {
+        this.name = "";
+      }
+    });
   }
 
 }

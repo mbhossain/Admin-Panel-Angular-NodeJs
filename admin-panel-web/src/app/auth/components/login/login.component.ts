@@ -20,7 +20,8 @@ import { ForgotPasswordComponent } from '../forgot-password/forgot-password.comp
 export class LoginComponent {
   public registerDialogRef!: MatDialogRef<RegisterComponent>;
   public forgetPasswordDialogRef!: MatDialogRef<ForgotPasswordComponent>;
-  public name: string = 'Register';
+  public nameRegister: string = 'Register';
+  public nameForgetPassword: string = 'Forget Password';
 
   public errorMsg = '';
   public user = new user();
@@ -36,7 +37,7 @@ export class LoginComponent {
 
   openUserRegistrationModal() {
     this.registerDialogRef = this._matDialog.open(RegisterComponent, {
-      data: { name: this.name },
+      data: { name: this.nameRegister },
       disableClose: true,
       // height: '100%',
       // width: '100%'
@@ -44,20 +45,20 @@ export class LoginComponent {
 
     this.registerDialogRef.afterClosed().subscribe(res => {
       if ((res == true)) {
-        this.name = "";
+        this.nameRegister = "";
       }
     });
   }
 
   openForgotPassWordModal() {
     this.forgetPasswordDialogRef = this._matDialog.open(ForgotPasswordComponent, {
-      data: { name: this.name },
+      data: { name: this.nameForgetPassword },
       disableClose: true
     });
 
     this.forgetPasswordDialogRef.afterClosed().subscribe(res => {
       if ((res == true)) {
-        this.name = "";
+        this.nameForgetPassword = "";
       }
     });
   }

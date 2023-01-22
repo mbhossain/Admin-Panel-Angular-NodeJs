@@ -20,11 +20,11 @@ export class AuthenticationService {
   ) { }
 
   loginUser(user: {}) {
-    return this.apiService.save<any>(this.serverPath + 'login', user)
+    return this.apiService.save<any>(this.serverPath + 'login', user);
   }
 
   registerUSer(user: {}) {
-    return this.apiService.save<any>(this.serverPath + 'register', user)
+    return this.apiService.save<any>(this.serverPath + 'register', user);
   }
 
   loggedIn() {
@@ -40,7 +40,11 @@ export class AuthenticationService {
   }
 
   resetPasswordSendMail(emailOrusername: {}) {
-    return this.apiService.save<any>(this.serverPath + 'password-reset', emailOrusername)
+    return this.apiService.save<any>(this.serverPath + 'password-reset', emailOrusername);
+  }
+
+  resetPassword(reset_key: any, newPassword: {}) {
+    return this.apiService.save<any>(this.serverPath + 'password-reset/' + reset_key, newPassword);
   }
 
 

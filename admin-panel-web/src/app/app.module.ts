@@ -18,6 +18,7 @@ import { NotFoundComponent } from './auth/components/not-found/not-found.compone
 import { RegisterComponent } from './auth/components/register/register.component';
 import { AuthenticationGuard } from './auth/services/authentication.guard';
 import { TokenInterceptorService } from './auth/services/token-interceptor.service';
+import { ResetPasswordComponent } from './auth/components/reset-password/reset-password.component';
 
 
 
@@ -28,7 +29,8 @@ import { TokenInterceptorService } from './auth/services/token-interceptor.servi
     LoginComponent,
     ForgotPasswordComponent,
     NotFoundComponent,
-    RegisterComponent
+    RegisterComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule

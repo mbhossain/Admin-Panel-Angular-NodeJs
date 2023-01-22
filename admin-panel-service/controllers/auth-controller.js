@@ -115,11 +115,14 @@ export const passwordUpdated = async (req, res) => {
         });
         if (!token) return res.status(400).send("Invalid link or expired");
 
-        user.password = req.body.password;
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(req.body.password, salt);
+
+        user.password = hash;
         await user.save();
         await token.delete();
 
-        res.send("password reset sucessfully.");
+        res.send({ 'statusText': 'Password reset sucessfully!' });
     } catch (error) {
         res.send("An error occured");
         console.log(error);
